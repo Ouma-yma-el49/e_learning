@@ -1,0 +1,51 @@
+{% extends "dashboard/etudiant/base.html" %}
+
+{% block content %}
+<div class="main-content" style="background-image: url('https://media.istockphoto.com/id/1366428092/fr/photo/webinaire-comp%C3%A9tences-dapprentissage-en-ligne-business-internet-technology-concepts.jpg?s=612x612&w=0&k=20&c=-wnmM7Fr-mMnOfqBR1MMFezFDNdv968WmmcumG8KRHI='); background-size: cover; background-position: center; min-height: 100vh; color: #ffffff; padding: 50px 30px; background-color: rgba(0, 0, 0, 0.5); border-radius: 10px; box-shadow: 0 6px 30px rgba(0, 0, 0, 0.4);">
+    <div class="container-fluid" style="width: 100%; padding: 0;">
+        <h2 class="text-center mb-4" style="font-size: 2.8rem; font-weight: 700; color: #ffffff; text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.6);">Chat</h2>
+
+        <!-- Flexbox container pour le formulaire et l'historique des messages -->
+        <div style="display: flex; flex-direction: column; gap: 20px; max-width: 1200px; margin: 0 auto; height: 60vh; overflow-y: auto; background-color: rgba(0, 0, 0, 0.4); border-radius: 15px; padding: 10px;">
+            <!-- Messages container -->
+            <div class="messages-container" style="flex-grow: 1; overflow-y: auto; padding: 15px; border-radius: 8px; background-color: rgba(0,0,0,0.09); box-shadow: 0 4px 15px rgb(27,25,25);">
+                <div class="messages-list" style="display: flex; flex-direction: column; gap: 15px;">
+                    {% for message in messages %}
+                        <div class="message-wrapper {% if message.from_user == request.user %}sent{% else %}received{% endif %}" style="display: flex; flex-direction: {% if message.from_user == request.user %}row-reverse{% else %}row{% endif %};">
+                            <div class="message-box {% if message.from_user == request.user %}sent-message{% else %}received-message{% endif %}" style="background-color: {% if message.from_user == request.user %}#028079{% else %}#f1f1f1{% endif %}; padding: 15px 20px; border-radius: 25px; max-width: 70%; word-wrap: break-word; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);">
+                                <div class="message-content" style="color: {% if message.from_user == request.user %}#ffffff{% else %}#333333{% endif %}; font-size: 1.1rem; line-height: 1.5;">
+                                    <strong>{{ message.from_user.username }}</strong>: {{ message.content }}
+                                </div>
+                                <div class="message-timestamp" style="font-size: 0.8rem; color: {% if message.from_user == request.user %}#ffffff{% else %}#666666{% endif %}; text-align: right; opacity: 0.7;">
+                                    {{ message.timestamp|date:"H:i" }}
+                                </div>
+                                {% if message.from_user == request.user %}
+                                    <form method="post" action="#" class="delete-form" style="margin-top: 5px;">
+                                        {% csrf_token %}
+                                        <a href="#" title="Supprimer" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce message ?');" style="color: #fa0202; font-size: 1.2rem; cursor: pointer;">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </a>
+                                    </form>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% empty %}
+                        <p class="no-messages" style="text-align: center; color: #ddd; font-size: 1.2rem;">Aucun message pour le moment.</p>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Formulaire pour envoyer un message -->
+            <div class="form-container" style="padding: 20px; border-top: 1px solid #ddd; background-color: rgba(0, 0, 0, 0.3); border-radius: 8px;">
+                <form method="post" class="message-form" style="display: flex; gap: 10px;">
+                    {% csrf_token %}
+                    <textarea name="content" rows="3" placeholder="Tapez votre message ici..." class="message-input" style="flex-grow: 1; padding: 15px; border-radius: 25px; border: 1px solid #ddd; font-size: 1.1rem; color: #ffffff; background-color: rgba(255, 255, 255, 0.2); box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);"></textarea>
+                    <button type="submit" class="send-button" style="background-color: #028079; color: white; padding: 15px 25px; border-radius: 25px; border: none; cursor: pointer; font-size: 1.1rem; font-weight: 600; transition: background-color 0.3s ease, transform 0.2s ease;">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

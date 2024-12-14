@@ -1,0 +1,145 @@
+{% extends 'dashboard/enseignant/base.html' %}
+
+{% block content %}
+<div class="row"> <!-- Adjusted margin to separate from sidebar -->
+
+    <!-- Main content -->
+    <main role="main" class="col-md-8 ml-sm-auto col-lg-10 px-4">
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+            <h1>Les cours</h1>
+             <a href="{% url 'cours_list' %}" class="btn btn-secondary mt-3">Retour à la Liste</a>
+        </div>
+
+        <!-- Search Input -->
+        <div style="text-align: center; margin-top: 30px;">
+            <input type="text" id="searchInput" placeholder="Rechercher ..." style="padding: 12px 20px; width: 60%; border-radius: 10px; border: 1px solid #ccc; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+        </div>
+
+        <h1>{{ cours.title }}</h1>
+        <div class="course-description" style="background-color: #f9f9f9; border: 1px solid #ddd; padding: 15px; border-radius: 8px; font-size: 16px; line-height: 1.6; margin-top: 20px; color: #333; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+            <h3>Objectifs du cours</h3>
+            <p>{{ cours.description }}</p>
+        </div>
+        <br/>
+
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+            <h2>Les chapitres</h2>
+        </div>
+
+        <div style="text-align: right; margin-bottom: 20px;">
+            <a href="{% url 'ajouter_chapitre' cours.id %}" class="btn btn-primary">Ajouter un Chapitre</a>
+        </div>
+
+        <table class="table table-striped table-bordered">
+            <thead>
+                <tr class="bg-dark text-white">
+                    <th>Titre</th>
+                    <th>Description</th>
+                    <th>Fichier</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for chapitre in cours.chapitres.all %}
+                <tr>
+                <form method="POST" action="{% url 'edit_chapitre' chapitre.id %}" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <td>
+                        <input type="text" name="titre" value="{{ chapitre.titre }}" class="form-control form-control-sm edit-input" disabled>
+                    </td>
+                    <td>
+                        <input type="text" name="description" value="{{ chapitre.description }}" class="form-control form-control-sm edit-input" disabled>
+                    </td>
+                    <td>
+                        <input type="text" name="fichier" value="{{ chapitre.fichier }}" class="form-control form-control-sm edit-input" disabled>
+                        <!-- Nouveau champ de fichier pour la modification -->
+                        <input type="file" name="nouveau_fichier" class="form-control form-control-sm d-none edit-input-file" disabled>
+                    </td>
+
+                    <td>
+                        <!-- Edit Icon with Link -->
+                        <button type="button" class="btn btn-sm btn-outline-secondary edit-btn" title="Modifier">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <!-- Delete Icon with Link -->
+                        <a href="{% url 'delete_chapitre' chapitre.id %}" class="btn btn-sm btn-outline-danger" title="Supprimer" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce chapitre ?');">
+                            <i class="fas fa-trash-alt"></i>
+                        </a>
+
+                        <!-- Save & Cancel buttons (hidden by default) -->
+                        <button type="submit" class="btn btn-sm btn-outline-success save-btn d-none" title="Sauvegarder">
+                            <i class="fas fa-save"></i>
+                        </button>
+                        <button type="button" class="btn btn-sm btn-outline-danger cancel-btn d-none" title="Annuler">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </td>
+                </form>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </main>
+</div>
+
+<script>
+// Script to toggle edit mode for each chapter row
+document.querySelectorAll('.edit-btn').forEach(button => {
+    button.addEventListener('click', function() {
+        const row = button.closest('tr');
+        toggleEditMode(row, true);
+    });
+});
+
+document.querySelectorAll('.cancel-btn').forEach(button => {
+    button.addEventListener('click', function() {
+        const row = button.closest('tr');
+        toggleEditMode(row, false);
+        restoreOriginalValues(row);
+    });
+});
+
+function toggleEditMode(row, isEditing) {
+    const inputs = row.querySelectorAll('input');
+    const editBtn = row.querySelector('.edit-btn');
+    const saveBtn = row.querySelector('.save-btn');
+    const cancelBtn = row.querySelector('.cancel-btn');
+    const fileInput = row.querySelector('input[type="file"]');
+
+    if (isEditing) {
+        inputs.forEach(input => input.removeAttribute('disabled'));
+        fileInput.classList.remove('d-none');
+        editBtn.classList.add('d-none');
+        saveBtn.classList.remove('d-none');
+        cancelBtn.classList.remove('d-none');
+    } else {
+        inputs.forEach(input => input.setAttribute('disabled', 'true'));
+        fileInput.classList.add('d-none');
+        editBtn.classList.remove('d-none');
+        saveBtn.classList.add('d-none');
+        cancelBtn.classList.add('d-none');
+    }
+}
+
+function restoreOriginalValues(row) {
+    const inputs = row.querySelectorAll('input');
+    inputs.forEach(input => {
+        input.value = input.defaultValue; // Restore the original values
+    });
+}
+
+    document.getElementById('searchInput').addEventListener('input', function() {
+        const searchText = this.value.toLowerCase();
+        const courses = document.querySelectorAll('#coursesContainer .card');
+
+        courses.forEach(card => {
+            const title = card.querySelector('h2').textContent.toLowerCase();
+            const description = card.querySelector('p').textContent.toLowerCase();
+
+            card.style.display = title.includes(searchText) || description.includes(searchText) ? 'block' : 'none';
+        });
+    });
+
+</script>
+
+{% endblock %}

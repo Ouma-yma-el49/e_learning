@@ -1,0 +1,48 @@
+{% extends "dashboard/enseignant/base.html" %}
+
+{% block content %}
+<div class="row">
+    <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+            <h1 >Chat</h1>
+            <a href="{% url 'dashboard' %}" class="btn btn-secondary mt-3"><i class="fa-solid fa-house"></i></a>
+        </div>
+
+        <div class="chat-container">
+            <!-- Messages container -->
+            <div class="messages-container">
+                <div class="messages-list">
+                    {% for message in messages %}
+                        <div class="message-wrapper {% if message.from_user == request.user %}sent{% else %}received{% endif %}">
+                            <div class="message-box {% if message.from_user == request.user %}sent-message{% else %}received-message{% endif %}">
+                                <strong class="message-user">{{ message.from_user.username }}</strong>
+                                <p class="message-content">{{ message.content }}</p>
+                                <div class="message-timestamp">{{ message.timestamp|date:"H:i" }}</div>
+                                {% if message.from_user == request.user %}
+                                    <form method="post" action="#" class="delete-form">
+                                        {% csrf_token %}
+                                        <a href="#" title="Supprimer" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce message ?');">
+                                            <i class="fas fa-trash-alt delete-icon"></i>
+                                        </a>
+                                    </form>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% empty %}
+                        <p class="no-messages">Aucun message pour le moment.</p>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Formulaire pour envoyer un message -->
+            <div class="form-container">
+                <form method="post" class="message-form">
+                    {% csrf_token %}
+                    <textarea name="content" rows="3" placeholder="Tapez votre message ici..." class="message-input"></textarea>
+                    <button type="submit" class="send-button">Envoyer</button>
+                </form>
+            </div>
+        </div>
+    </main>
+</div>
+{% endblock %}

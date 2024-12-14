@@ -1,0 +1,132 @@
+{% extends 'dashboard/enseignant/base.html' %}
+
+{% block content %}
+<div class="row"> <!-- Adjusted margin to separate from sidebar -->
+
+    <!-- Main content -->
+    <main role="main" class="col-md-8 ml-sm-auto col-lg-10 px-4">
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+            <h1>Les cours</h1>
+        </div>
+
+        <!-- Search Input -->
+        <div style="text-align: center; margin-top: 30px;">
+            <input type="text" id="searchInput" placeholder="Rechercher un cours..." style="padding: 12px 20px; width: 60%; border-radius: 10px; border: 1px solid #ccc; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+        </div>
+
+        <!-- Add Course Button -->
+        <p style="text-align: center; margin-top: 20px;">
+            <a href="{% url 'ajouter_cours' %}" style="padding: 12px 20px; background-color: #059a96; color: white; text-decoration: none; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);">Ajouter un nouveau cours</a>
+        </p>
+
+        <table class="table table-striped table-bordered">
+            <thead>
+                <tr class="bg-dark text-white">
+                    <th>Cours</th>
+                    <th>Contenu</th>
+                    <th>Enseignant</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+    {% for cours in cours %}
+    <tr data-cours-id="{{ cours.id }}">
+        <form method="POST" action="{% url 'modifier_cours' cours.id %}">
+            {% csrf_token %}
+            <td>
+                <input type="text" name="titre" value="{{ cours.titre }}" class="form-control form-control-sm edit-input" disabled>
+            </td>
+            <td>
+                <input type="text" name="description" value="{{ cours.description }}" class="form-control form-control-sm edit-input" disabled>
+            </td>
+            <td>{{ cours.enseignant }}</td>
+            <td>
+                <a href="{% url 'detail_cours' cours.pk %}" class="btn btn-sm btn-outline-info" title="Voir les détails">
+                                <i class="fas fa-info-circle"></i>
+                            </a>
+                <button type="button" class="btn btn-sm btn-outline-secondary edit-btn" title="Modifier">
+                    <i class="fas fa-edit"></i>
+                </button>
+                <a href="{% url 'supprimer_cours' cours.id %}" class="btn btn-sm btn-outline-danger" title="Supprimer" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette annonce ?');">
+                    <i class="fas fa-trash-alt"></i>
+                </a>
+                <button type="submit" class="btn btn-sm btn-outline-success save-btn d-none" title="Sauvegarder">
+                    <i class="fas fa-save"></i>
+                </button>
+                <button type="button" class="btn btn-sm btn-outline-danger cancel-btn d-none" title="Annuler">
+                    <i class="fas fa-times"></i>
+                </button>
+            </td>
+        </form>
+    </tr>
+    {% endfor %}
+</tbody>
+        </table>
+
+    </main>
+</div>
+
+<!-- JavaScript for Edit/Save/Cancel Actions -->
+<script>
+    // Fonction pour activer/désactiver le mode édition pour une ligne
+    document.querySelectorAll('.edit-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const row = button.closest('tr');
+            toggleEditMode(row, true);
+        });
+    });
+
+    document.querySelectorAll('.cancel-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const row = button.closest('tr');
+            toggleEditMode(row, false);
+            restoreOriginalValues(row);
+        });
+    });
+
+    function toggleEditMode(row, isEditing) {
+        const inputs = row.querySelectorAll('input');
+        const editBtn = row.querySelector('.edit-btn');
+        const saveBtn = row.querySelector('.save-btn');
+        const cancelBtn = row.querySelector('.cancel-btn');
+
+        if (isEditing) {
+            inputs.forEach(input => input.removeAttribute('disabled'));
+            editBtn.classList.add('d-none');
+            saveBtn.classList.remove('d-none');
+            cancelBtn.classList.remove('d-none');
+        } else {
+            inputs.forEach(input => input.setAttribute('disabled', 'true'));
+            editBtn.classList.remove('d-none');
+            saveBtn.classList.add('d-none');
+            cancelBtn.classList.add('d-none');
+        }
+    }
+
+    function restoreOriginalValues(row) {
+        const inputs = row.querySelectorAll('input');
+        inputs.forEach(input => {
+            input.value = input.defaultValue; // Restaure les valeurs initiales
+        });
+    }
+
+    // Fonction pour la recherche dans les cours
+    document.getElementById('searchInput').addEventListener('input', function() {
+        const searchText = this.value.toLowerCase();  // Texte de recherche en minuscules
+        const rows = document.querySelectorAll('table tbody tr');  // Sélectionner toutes les lignes du tableau
+
+        rows.forEach(row => {
+            const title = row.querySelector('td input[name="titre"]').value.toLowerCase();  // Récupérer le titre du cours
+            const description = row.querySelector('td input[name="description"]').value.toLowerCase();  // Récupérer la description du cours
+
+            // Afficher ou masquer la ligne en fonction de la recherche
+            if (title.includes(searchText) || description.includes(searchText)) {
+                row.style.display = '';  // Afficher la ligne
+            } else {
+                row.style.display = 'none';  // Masquer la ligne
+            }
+        });
+    });
+</script>
+
+{% endblock %}

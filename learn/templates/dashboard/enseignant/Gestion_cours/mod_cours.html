@@ -1,0 +1,38 @@
+{% extends 'dashboard/enseignant/base.html' %}
+{% block content %}
+    <div class="row" > <!-- Adjusted margin to separate from sidebar -->
+
+            <!-- Main content -->
+        <main role="main" class="col-md-8 ml-sm-auto col-lg-10 px-4">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 >Modifier le cours : {{ cours.titre }}</h1>
+                </div>
+                    <!-- Formulaire pour modifier un cours -->
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div style="margin-bottom: 15px;">
+                            <label for="id_titre" style="font-weight: bold; color: #555;">Titre :</label>
+                            {{ form.titre }}
+                        </div>
+                        <div style="margin-bottom: 15px;">
+                            <label for="id_description" style="font-weight: bold; color: #555;">Description :</label>
+                            {{ form.description }}
+                        </div>
+
+
+                        <!-- Bouton de soumission -->
+                        <div style="text-align: center;">
+                            <button type="submit" style="padding: 10px 20px; background-color: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer; transition: background-color 0.3s;">
+                                Enregistrer les modifications
+                            </button>
+                        </div>
+                    </form>
+
+                    <!-- Lien pour revenir à la liste des cours -->
+                    <div style="text-align: center; margin-top: 20px;">
+                        <a href="{% url 'cours_list' %}" style="color: #555; text-decoration: none; font-weight: bold; padding: 8px 15px; background-color: #e7e7e7; border-radius: 5px; transition: background-color 0.3s;">← Retour à la liste des cours</a>
+                    </div>
+
+            </main>
+    </div>
+{% endblock %}

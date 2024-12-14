@@ -1,0 +1,64 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block title %}Connexion{% endblock %}
+
+{% block content %}
+<div class="mask d-flex align-items-center h-100 gradient-custom-3">
+    <div class="container h-100">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col-12 col-md-8 col-lg-7 col-xl-6">
+                <div class="card shadow-lg" style="border-radius: 20px;">
+                    <div class="card-body p-8">
+                        <h2 class="text-uppercase text-center mb-5">
+                            Inscription
+                        </h2>
+                        {% if error %}
+                    <div class="alert alert-danger" role="alert" data-mdb-color="danger">
+                      {{ message }}
+                    </div>
+                    {% endif %}
+                        <form action="" method="post">
+                            {% csrf_token %}
+                            <!-- Email input -->
+                            <div class="form-outline mb-4">
+                                <label class="form-label" for="name">Nom et Prénom</label>
+                                <input type="text" id="name" class="form-control form-control-lg" name="name" required />
+
+                            </div>
+                            <div class="form-outline mb-4">
+                                <label class="form-label" for="email">Email</label>
+                                <input type="email" id="email" class="form-control form-control-lg" name="email" required />
+
+                            </div>
+                            <!-- Password input -->
+                            <div class="form-outline mb-4">
+                                <label class="form-label" for="pass">Mot de Passe</label>
+                                <input type="password" id="pass" class="form-control form-control-lg" name="password" required />
+
+                            </div>
+                            <div class="form-outline mb-4">
+                                <label class="form-label" for="confirmpassword">Confirmer Mot de Passe</label>
+                                <input type="password" id="confirmpassword" class="form-control form-control-lg" name="confirmpassword" required />
+                            </div>
+
+                            <label class="form-check-label" for="form2Example3c">
+                          J'ai déjà un compte
+                          <a style="text-decoration: none" href="{% url 'sing_in' %}">Se connecter</a>
+                            <br/>
+                        </label>
+                            <!-- Submit button -->
+                            <br/>
+                            <div class="d-flex justify-content-center center centered">
+                                <button type="submit" class="btn btn-primary btn-lg btn-block ">S'inscrire</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+
+

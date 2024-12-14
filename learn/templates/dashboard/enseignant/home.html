@@ -1,0 +1,71 @@
+{% extends 'dashboard/enseignant/base.html' %}
+{% block content %}
+        <div class="row">
+            <!-- Main content -->
+            <main role="main" class="col-md-8 ml-sm-auto col-lg-10 px-4">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="h2">Tableau de Bord</h1>
+                </div>
+
+                <!-- Cards -->
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <div class="card text-black bg-primary mb-3">
+                            <div class="card-body">
+                                <h5 class="card-title">Nombre de Cours</h5>
+                                <p class="card-text align-right">{{ total_cours }} cours en ligne </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card text-black bg-success mb-3">
+                            <div class="card-body">
+                                <h5 class="card-title">Nombre d'Étudiants</h5>
+                                <p class="card-text">{{ total_etu}} étudiants inscrits</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                 <!-- Tableau des annonces -->  <div class="table-responsive">
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr class="bg-dark text-white">
+                        <th>Annonce</th>
+                        <th>Contenu</th>
+                        <th>Date de publication</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for annonce in annonces %}
+                    <tr>
+                        <td>{{ annonce.title }}</td>
+                        <td>{{ annonce.contenu }}</td>
+                        <td>{{ annonce.date_creation }}</td>
+                    </tr>
+
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+            </main>
+
+        </div>
+     <script>
+        document.getElementById('searchInput').addEventListener('input', function() {
+            const searchText = this.value.toLowerCase();
+            const annonces = document.querySelectorAll('#annonces .card');
+
+            courses.forEach(card => {
+                const title = card.querySelector('h2').textContent.toLowerCase();
+                const description = card.querySelector('p').textContent.toLowerCase();
+
+                if (title.includes(searchText) || description.includes(searchText)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+    </script>
+{% endblock content %}

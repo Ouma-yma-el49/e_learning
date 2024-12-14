@@ -1,0 +1,70 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block title %}À propos{% endblock %}
+
+{% block content %}
+<div class="hero" style="text-align: center; padding: 100px 20px; position: relative;">
+    <h1 class="hero-title">À propos de nous</h1>
+    <h2 class="hero-text" style="color: #ffffff;">Découvrez qui nous sommes et ce qui nous motive.</h2>
+    <p class="hero-text">Une plateforme dédiée à l'apprentissage et à l'épanouissement de vos compétences.</p>
+
+    <!-- Icone animée avec couleur blanche et z-index pour être au-dessus -->
+    <div class="cta-animation" style="font-size: 2.5rem; margin-top: 20px; animation: bounce 2s infinite; position: relative; z-index: 1;">
+        <i class="fa-solid fa-angles-down" style="cursor: pointer; color: #03cca6;"></i>
+    </div>
+</div>
+
+<!-- Notre mission -->
+<section class="mission" style="text-align: center; padding: 50px 20px;background-color: rgba(48,47,47,0.9);">
+    <h2>Notre Mission</h2>
+    <p style="color: white; font-size: 22px;">Notre mission est d’offrir une plateforme d’apprentissage flexible, interactive et accessible à tous. Nous voulons aider les étudiants et les professionnels à développer leurs compétences et à réussir dans leur carrière.</p>
+</section>
+
+
+<!-- Pourquoi nous choisir -->
+<section class="why-choose-us" style="text-align: center; padding: 50px 20px; background-color: rgba(48,47,47,0.9);">
+    <h2>Pourquoi choisir notre plateforme ?</h2>
+    <p style="color: white; font-size: 22px;">Nous offrons un accès facile à des cours de qualité, une expérience interactive et un suivi personnalisé, tout en permettant aux apprenants de progresser à leur propre rythme.</p>
+</section>
+
+{% endblock %}
+
+<!-- Ajout du style CSS pour l'animation -->
+<style>
+    @keyframes bounce {
+        0%, 100% {
+            transform: translateY(0);
+        }
+        50% {
+            transform: translateY(-20px);
+        }
+    }
+
+    .cta-animation:hover {
+        color: #3c8dbc;
+        transform: scale(1.2);
+        transition: transform 0.3s ease-in-out;
+    }
+
+    .team-members {
+        display: flex;
+        justify-content: space-around;
+        flex-wrap: wrap;
+        gap: 30px;
+        text-align: center;
+    }
+
+    .team-member {
+        flex: 1 1 calc(33% - 20px);
+        background-color: rgba(255, 255, 255, 0.8);
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .team-member:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
+</style>

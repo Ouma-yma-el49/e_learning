@@ -1,0 +1,90 @@
+{% extends 'dashboard/etudiant/base.html' %}
+
+{% block content %}
+<div class="main-content" style="background-image: url('https://media.istockphoto.com/id/1366428092/fr/photo/webinaire-comp%C3%A9tences-dapprentissage-en-ligne-business-internet-technology-concepts.jpg?s=612x612&w=0&k=20&c=-wnmM7Fr-mMnOfqBR1MMFezFDNdv968WmmcumG8KRHI='); background-size: cover; background-position: center; min-height: 100vh; color: #ffffff; padding: 50px 30px; background-color: rgba(0, 0, 0, 0.7); border-radius: 10px; box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);">
+    <div class="container-fluid" style="width: 100%; padding: 0;">
+        <h2 class="text-center mb-4" style="font-size: 2.8rem; font-weight: 600; color: #ffffff;">Mes devoirs</h2>
+
+        <!-- Formulaire pour ajouter/modifier un devoir -->
+        <div class="form-container" style="max-width: 800px; background: rgba(0, 0, 0, 0.8); padding: 30px; border-radius: 10px; box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3); margin: 0 auto;">
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+               <input type="hidden" name="devoir_id" id="devoir_id" value="{% if selected_devoir %}{{ selected_devoir.id }}{% else %}{% endif %}">
+
+                <h2 class="text-center" style="color: #ffffff; font-size: 1.8rem; margin-bottom: 20px;">{% if selected_devoir %}Modifier le Devoir{% else %}Ajouter un Devoir{% endif %}</h2>
+
+                <div class="form-group" style="margin-bottom: 20px;">
+                    <input type="text" name="titre" id="titre" placeholder="Titre" class="form-input" required
+                           style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #03716b; background-color: transparent; color: #ffffff;"
+                           value="{% if selected_devoir %}{{ selected_devoir.titre }}{% else %}{% endif %}">
+
+                </div>
+
+                <div class="form-group" style="margin-bottom: 20px;">
+
+                    <textarea name="description" id="description" placeholder="Description" class="form-input" rows="4" required style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #03716b; background-color: transparent; color: #ffffff;">
+                        {% if selected_devoir %}{{ selected_devoir.description }}{% else %}{% endif %}
+                    </textarea>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 20px;">
+                    <input type="file" name="fichier" id="fichier" class="form-input" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #03716b; background-color: transparent; color: #ffffff;">
+                    {% if selected_devoir %}{{ selected_devoir.fichier }}{% else %}{% endif %}
+                </div>
+
+                <button type="submit" class="btn-submit" style="width: 100%; padding: 12px; background-color: #059a96; color: white; border-radius: 8px; border: none; cursor: pointer;">
+                    {% if selected_devoir %}Sauvegarder{% else %}Soumettre{% endif %}
+                </button>
+            </form>
+        </div>
+
+        <!-- Espace entre le formulaire et le tableau -->
+        <div style="height: 30px;"></div>
+
+        <!-- Tableau des devoirs -->
+        <div class="table-container" style="width: 100%; padding: 0;">
+            <div class="table-responsive">
+                <table class="table table-bordered" style="width: 100%; background: rgba(255, 255, 255, 0.1); color: #ffffff; border-radius: 8px; border: 1px solid #03716b;">
+                    <thead>
+                        <tr style="background-color: #059a96; color: #ffffff; text-align: center;">
+                            <th>Titre</th>
+                            <th>Description</th>
+                            <th>Fichier</th>
+                            <th>Date de Dépôt</th>
+                            <th>Note</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for devoir in devoirs %}
+                            <tr style="text-align: center; background-color: rgba(0, 0, 0, 0.6);">
+                                <td>{{ devoir.titre }}</td>
+                                <td>{{ devoir.description }}</td>
+                                <td>
+                                    {% if devoir.fichier %}
+                                        <a href="{{ devoir.fichier.url }}" title="Télécharger">
+                                            <i class="fas fa-download" style="color: #059a96; font-size: 1.2rem;"></i>
+                                        </a>
+                                    {% else %}
+                                        Aucun fichier
+                                    {% endif %}
+                                </td>
+                                <td>{{ devoir.date_depot }}</td>
+                                <td>{{ devoir.note|default:"Non noté" }}</td>
+                                <td>
+                                    <a href="?devoir_id={{ devoir.id }}" title="Modifier">
+                                        <i class="fas fa-edit" style="color: #f0ad4e; font-size: 1.2rem;"></i>
+                                    </a>
+                                    <a href="{% url 'delete_devoir' devoir.id %}"  title="Supprimer" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce devoir ?');">
+                                        <i class="fas fa-trash-alt" style="color: #d9534f; font-size: 1.2rem;"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

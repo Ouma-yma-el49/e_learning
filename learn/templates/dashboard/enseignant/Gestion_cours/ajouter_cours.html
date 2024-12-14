@@ -1,0 +1,42 @@
+{% extends 'dashboard/enseignant/base.html' %}
+
+{% block content %}
+     <div class="row">
+
+
+        <!-- Main Content Section -->
+        <main style="width: 80%; padding: 20px; font-family: Arial, sans-serif; color: #333;">
+              <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 >Les cours</h1>
+
+             <!-- Link to Course List -->
+                <p style="text-align: center; margin-top: 15px;">
+                    <a href="{% url 'cours_list' %}" style="color: #007bff; text-decoration: none; font-size: 1em;"><i class="fa-solid fa-arrow-left"></i></a>
+                </p>
+                </div>
+            <h1 style=" text-align:center; font-size: 1.8em; color: #333;">Ajouter un nouveau cours</h1>
+
+            <!-- Form to Add a New Course -->
+            <form method="post" enctype="multipart/form-data" style="margin-top: 20px; padding: 20px; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+                {% csrf_token %}
+                <div style="margin-bottom: 15px;">
+                    <label for="id_titre" style="display: block; font-weight: bold; margin-bottom: 5px;">Titre :</label>
+                    {{ form.titre }}
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <label for="id_description" style="display: block; font-weight: bold; margin-bottom: 5px;">Description :</label>
+                    {{ form.description }}
+                </div>
+
+                <button type="submit" style="padding: 10px 20px; background-color: #059a96; color: white; border: none; border-radius: 5px; cursor: pointer;">Ajouter le cours</button>
+            </form>
+
+
+
+
+
+
+            </main>
+    </div>
+
+{% endblock content %}

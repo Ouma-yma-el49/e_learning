@@ -1,0 +1,70 @@
+{% extends 'dashboard/enseignant/base.html' %}
+
+{% block content %}
+    <div class="row">
+        <main role="main" class="col-md-8 ml-sm-auto col-lg-10 px-4">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1>Liste des Étudiants Inscrits</h1>
+            </div>
+
+            <div style="text-align: center; margin-top: 30px;">
+                <input type="text" id="searchInput" placeholder="Rechercher un étudiant..." style="padding: 12px 20px; width: 60%; border-radius: 10px; border: 1px solid #ccc; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+            </div>
+
+            <div class="container mt-4">
+                <a href="{% url 'add_etudiant' %}" class="btn btn-primary mb-3">Ajouter un Étudiant</a>
+
+                <table class="table table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Nom</th>
+                            <th>Email</th>
+                            <th>La date d'inscription</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for etudiant in etudiants %}
+                        <tr>
+                            <td>{{ etudiant.username }}</td>
+                            <td>{{ etudiant.email }}</td>
+                            <td> {{ etudiant.date_joined }}</td>
+                            <td>
+                                <!-- Delete Icon with Link -->
+                                <a href="{% url 'delete_etu' etudiant.id %}" class="btn btn-sm btn-outline-danger" title="Supprimer" onclick="return confirm('Vous voulez supprimer cet étudiant ?');">
+                                    <i class="fas fa-trash-alt"></i>
+                                </a>
+
+                                <!-- Chat Button -->
+
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="4">Aucun étudiant inscrit.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.getElementById('searchInput').addEventListener('input', function() {
+            const searchText = this.value.toLowerCase();
+            const rows = document.querySelectorAll('table tbody tr');
+
+            rows.forEach(row => {
+                const title = row.querySelector('td:first-child').textContent.toLowerCase();
+                const content = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
+
+                if (title.includes(searchText) || content.includes(searchText)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+    </script>
+{% endblock %}

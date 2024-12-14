@@ -1,0 +1,29 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Mon Site Web{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/style_login.css' %}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<!-- integration du fichier CSS de Bootstrap -->
+
+
+       {% include 'base/header.html' %}
+
+</head>
+
+<body>
+
+        {% block content %}
+            <div class="container-fluid">
+        <!-- Le contenu spécifique à chaque page -->
+            </div>
+        {% endblock %}
+   <script src="{% static 'js/jQuery.js' %}"></script>
+    <script src="{% static 'js/popper.js' %}"></script>
+    <script src="{% static 'js/bootstrap.js' %}"></script>
+</body>
+
+</html>

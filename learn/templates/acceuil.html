@@ -1,0 +1,37 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block title %}Accueil{% endblock %}
+
+{% block content %}
+<div class="hero" style="text-align: center; padding: 100px 20px; position: relative;">
+    <h1 class="hero-title">Développez vos compétences en ligne</h1>
+    <h2 class="hero-text" style="color: #ffffff;">Retrouvez les meilleurs cours et ressources pour améliorer vos compétences.</h2>
+    <p class="hero-text">Commencez à apprendre aujourd'hui pour un avenir meilleur demain.</p>
+
+    <!-- Icone animée avec couleur blanche et z-index pour être au-dessus -->
+    <div class="cta-animation" style="font-size: 2.5rem; margin-top: 20px; animation: bounce 2s infinite; position: relative; z-index: 1;">
+        <i class="fa-solid fa-angles-down" style="cursor: pointer; color: #03cca6;"></i>
+    </div>
+
+    <a href="{% url 'sing_up' %}" class="btn">S'inscrire</a>
+</div>
+
+<!-- Ajout du style CSS pour l'animation -->
+<style>
+    @keyframes bounce {
+        0%, 100% {
+            transform: translateY(0);
+        }
+        50% {
+            transform: translateY(-20px);
+        }
+    }
+
+    .cta-animation:hover {
+        color: #3c8dbc;
+        transform: scale(1.2);
+        transition: transform 0.3s ease-in-out;
+    }
+</style>
+
+{% endblock %}

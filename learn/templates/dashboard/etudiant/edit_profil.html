@@ -1,0 +1,29 @@
+{% extends 'dashboard/etudiant/base.html' %}
+
+{% block content %}
+<div class="main-content" style="background-image: url('https://media.istockphoto.com/id/1366428092/fr/photo/webinaire-comp%C3%A9tences-dapprentissage-en-ligne-business-internet-technology-concepts.jpg?s=612x612&w=0&k=20&c=-wnmM7Fr-mMnOfqBR1MMFezFDNdv968WmmcumG8KRHI='); background-size: cover; background-position: center; min-height: 100vh; color: #ffffff; padding: 40px;">
+    <div style="background-color: rgba(0, 0, 0, 0.6); padding: 30px; border-radius: 12px;">
+
+        <div class="container" style="max-width: 600px; margin: auto;">
+            <h2 class="text-center" style="color: #fff; font-weight: 700;">Modifier Mon Profil</h2>
+            <form method="post" style="background-color: #ffffff; padding: 25px; border-radius: 12px; box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); color: #333;">
+                {% csrf_token %}
+
+                <h3 style="color: #059a96; font-weight: bold; font-size: 1.2em; margin-top: 15px;">Informations Utilisateur</h3>
+                <div class="form-group">
+                    {{ user_form.as_p }}
+                </div>
+
+                <h3 style="color: #059a96; font-weight: bold; font-size: 1.2em; margin-top: 15px;">Informations du Profil</h3>
+                <div class="form-group">
+                    {{ profile_form.as_p }}
+                </div>
+
+                <div class="text-center mt-4">
+                    <button type="submit" class="btn btn-primary" style="background-color: #059a96; border: none; padding: 10px 20px; border-radius: 8px; font-size: 1em; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);">Sauvegarder</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

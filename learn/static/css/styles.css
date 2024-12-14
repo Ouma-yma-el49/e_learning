@@ -1,0 +1,388 @@
+/* Sidebar */
+.sidebar {
+    background-color: #059a96 !important;/* Bleu nuit */
+    color: #2c3e50 !important;
+    padding-top: 6rem;
+    width: 250px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.sidebar .nav-link {
+    color: #1b1919;
+    padding: 0.8rem 1.5rem;
+    border-radius: 4px;
+    transition: color 0.3s, background-color 0.3s;
+}
+.sidebar .nav-link:hover {
+    color: white;
+    background-color: #15cec8; /* Couleur au survol */
+}
+.sidebar .nav-link.active {
+    color: white;
+    background-color: #1abc9c;
+}
+
+/* Section principale */
+main{
+    margin-left: 250px;
+    padding: 2rem;
+    background-color: #ecf0f1;
+    min-height: 100vh;
+}
+
+/* Style des cartes */
+.card {
+    border: none;
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+    background: linear-gradient(135deg, #abe8e6, #ffffff); /* Gradient pour un style plus moderne */
+    color: #1b1919;
+}
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+/* Titres et texte */
+h1, h4 {
+    color: #2c3e50;
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+
+/* Tableaux */
+.table {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+}
+.table th {
+    background-color: #2c3e50;
+    color: white;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+.table tbody tr:nth-child(even) {
+    background-color: #f9f9f9; /* Couleur alternée pour la lisibilité */
+}
+.table tbody tr:hover {
+    background-color: #e1e1e1;
+}
+
+/* Bouton de déconnexion */
+.logout-btn {
+    color: #e74c3c;
+    font-weight: bold;
+    margin-top: auto;
+    padding: 1rem 1.5rem;
+}
+.logout-btn:hover {
+    color: #c0392b;
+    text-decoration: underline;
+    background-color: #2c3e50;
+}
+/* Conteneur principal avec marge pour la sidebar */
+.main-content {
+    margin-left: 250px; /* Ajustez selon la largeur de votre sidebar */
+    padding: 20px;
+    max-width: 800px;
+    margin: auto;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Styles pour le titre et le contenu */
+.chapter-title {
+    font-family: Arial, sans-serif;
+    color: #333;
+    text-align: center;
+    font-size: 2em;
+    margin-bottom: 15px;
+}
+
+.chapter-content {
+    color: #555;
+    font-size: 1.1em;
+    line-height: 1.6;
+    margin-bottom: 15px;
+}
+
+/* Bouton de retour */
+.btn-back {
+    display: inline-block;
+    padding: 10px 15px;
+    background-color: #059a96;
+    color: white;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: background-color 0.3s;
+}
+
+.btn-back:hover {
+    background-color: #035753;
+}
+/* Style général du conteneur principal */
+.form-container {
+    margin: 20px auto;
+    padding: 20px;
+    max-width: 600px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Titre du formulaire */
+.form-container h1 {
+    font-family: Arial, sans-serif;
+    color: #333;
+    text-align: center;
+    font-size: 1.8em;
+    margin-bottom: 15px;
+}
+
+/* Style des champs de formulaire */
+.form-container div {
+    margin-bottom: 15px;
+}
+
+.form-container label {
+    font-size: 1em;
+    color: #555;
+    margin-bottom: 5px;
+    display: block;
+}
+
+.form-container input[type="text"],
+.form-container textarea,
+.form-container input[type="file"] {
+    width: 100%;
+    padding: 10px;
+    font-size: 1em;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+/* Bouton de soumission */
+.form-container button[type="submit"] {
+    width: 100%;
+    padding: 12px;
+    background-color: #03716b;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.form-container button[type="submit"]:hover {
+    background-color: #357abd;
+}
+
+/* Lien de retour */
+.form-container p a {
+    color: #4a90e2;
+    text-decoration: none;
+    font-size: 0.9em;
+}
+
+.form-container p a:hover {
+    text-decoration: underline;
+}
+.document-management {
+    width: 300px;
+    margin: auto;
+    font-family: Arial, sans-serif;
+}
+
+.section {
+    margin-top: 20px;
+    background-color: #f4f4f4;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+h2 {
+    font-size: 18px;
+    text-align: center;
+    color: #333;
+}
+
+button {
+    background-color: #6a1b9a;
+    color: white;
+    border: none;
+    padding: 8px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+button:hover {
+    background-color: #4a148c;
+}
+
+.document-list ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.document-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 5px 0;
+    padding: 5px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+}
+
+.remove {
+    background-color: #e57373;
+    color: white;
+    border: none;
+    padding: 5px;
+    cursor: pointer;
+    border-radius: 3px;
+}
+
+    /* Champs désactivés ressemblent à du texte */
+.edit-input[disabled] {
+        border: none;
+        background: none;
+        color: inherit;
+        padding: 0;
+        font-size: inherit;
+        cursor: default;
+}
+
+    /* Champs activés ressemblent visuellement aux champs désactivés */
+.edit-input {
+        border: none;
+        background: none;
+        padding: 0;
+        font-size: inherit;
+        color: inherit;
+}
+
+    /* Effet visuel activé uniquement en mode édition */
+.edit-input:focus {
+        outline: 1px solid #007bff; /* Bordure bleue lorsqu'on édite */
+}
+/* Conteneur principal du chat */
+.chat-container {
+    display: flex;
+    flex-direction: column;
+    height: 75vh; /* 75% de la hauteur de l'écran */
+    justify-content: space-between;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 10px;
+    background-color: #f9f9f9;
+}
+
+/* Conteneur des messages */
+.messages-container {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding-right: 10px;
+}
+
+/* Liste des messages */
+.messages-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* Structure du message */
+.message-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.sent-message, .received-message {
+    max-width: 70%;
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.sent-message {
+    background-color: #d1e7dd;
+    align-self: flex-end;
+}
+
+.received-message {
+    background-color: #f1f1f1;
+    align-self: flex-start;
+}
+
+/* Utilisateur */
+.message-user {
+    font-weight: bold;
+    font-size: 12px;
+}
+
+/* Contenu du message */
+.message-content {
+    margin: 5px 0;
+}
+
+/* Heure du message */
+.message-timestamp {
+    font-size: 12px;
+    color: #6c757d;
+}
+
+/* Formulaire de message */
+.form-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.message-input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    resize: none;
+    font-size: 14px;
+    line-height: 1.5;
+    box-sizing: border-box;
+}
+
+.send-button {
+    align-self: flex-end;
+    padding: 10px 15px;
+    background-color: #007bff;
+    border: none;
+    color: white;
+    font-size: 14px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.send-button:hover {
+    background-color: #0056b3;
+}
+
+/* Affichage si aucun message */
+.no-messages {
+    color: #6c757d;
+    font-style: italic;
+    text-align: center;
+}

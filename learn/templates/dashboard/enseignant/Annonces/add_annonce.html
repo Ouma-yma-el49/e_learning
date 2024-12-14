@@ -1,0 +1,19 @@
+
+{% extends 'dashboard/enseignant/base.html' %}
+{% block content %}
+        <div class="row">
+            <!-- Main content -->
+            <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="h2">Ajouter une nouvelle annonce</h1>
+                     <a href="{% url 'annonces_list' %}" class="btn btn-secondary mt-3">Retour aux annonces</a>
+                </div>
+                 <form method="post" action="">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button type="submit">Ajouter l'annonce</button>
+                </form>
+            </main>
+        </div>
+
+{% endblock content %}

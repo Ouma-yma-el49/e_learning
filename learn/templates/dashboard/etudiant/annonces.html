@@ -1,0 +1,34 @@
+{% extends 'dashboard/etudiant/base.html' %}
+
+{% block content %}
+<div class="hero" >
+    <h1 class="hero-title">Nouvelles annonces</h1>
+    <div class="hero-text">
+          <div class="table-responsive">
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr class="bg-dark text-white">
+                        <th>Annonce</th>
+                        <th>Contenu</th>
+                        <th>Date de publication</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for annonce in annonces %}
+                    <tr>
+                        <td>{{ annonce.title }}</td>
+                        <td>{{ annonce.contenu }}</td>
+                        <td>{{ annonce.date_creation }}</td>
+                    </tr>
+
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+
+{% endblock %}
+

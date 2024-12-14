@@ -1,0 +1,28 @@
+{% extends 'dashboard/enseignant/base.html' %}
+
+{% block content %}
+<div class="row">
+    <!-- Main content -->
+    <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+            <h1 class="h2" style="color: #059a96;">Ajouter un Chapitre à "{{ cours.titre }}"</h1>
+             <a href="{% url 'cours_list' %}" class="btn btn-secondary mt-3">Retour à la Liste</a>
+        </div>
+        
+        <div class="form-container" style="background-color: rgba(255, 255, 255, 0.8); padding: 40px; border-radius: 10px; box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);">
+            <form method="post" action="" enctype="multipart/form-data">
+                {% csrf_token %}
+                
+                <div class="form-group" style="margin-bottom: 20px;">
+                    {{ form.as_p }}
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="padding: 12px 30px; border-radius: 8px; border: none; background-color: #059a96; color: white; font-weight: bold; cursor: pointer; transition: all 0.3s;">
+                    Ajouter le Chapitre
+                </button>
+            </form>
+        </div>
+    </main>
+</div>
+
+{% endblock content %}

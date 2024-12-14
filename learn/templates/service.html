@@ -1,0 +1,74 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block title %}Nos Services{% endblock %}
+
+{% block content %}
+<div class="hero" style="text-align: center; padding: 100px 20px; position: relative;">
+    <h1 class="hero-title">Nos Services</h1>
+    <h2 class="hero-text" style="color: #ffffff;">Découvrez nos offres pour booster votre parcours d'apprentissage.</h2>
+    <p class="hero-text">Choisissez parmi nos formations en ligne, suivi personnalisé et plus encore.</p>
+
+    <!-- Icone animée avec couleur blanche et z-index pour être au-dessus -->
+    <div class="cta-animation" style="font-size: 2.5rem; margin-top: 20px; animation: bounce 2s infinite; position: relative; z-index: 1;">
+        <i class="fa-solid fa-angles-down" style="cursor: pointer; color: #03cca6;"></i>
+    </div>
+</div>
+
+<!-- Liste des services -->
+<section class="services-list" style="display: flex; justify-content: space-around; flex-wrap: wrap; gap: 30px; text-align: center; margin-top: 40px;">
+    <div class="service-item" style="flex: 1 1 calc(33% - 20px); background-color: rgba(255, 255, 255, 0.8); padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+        <h3>Formation en ligne</h3>
+        <p>Accédez à des cours interactifs en ligne.</p>
+    </div>
+    <div class="service-item" style="flex: 1 1 calc(33% - 20px); background-color: rgba(255, 255, 255, 0.8); padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+        <h3>Suivi personnalisé</h3>
+        <p>Profitez de séances de coaching sur mesure.</p>
+    </div>
+    <div class="service-item" style="flex: 1 1 calc(33% - 20px); background-color: rgba(255, 255, 255, 0.8); padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+        <h3>Ressources exclusives</h3>
+        <p>Accédez à des guides, articles et outils pratiques.</p>
+    </div>
+</section>
+
+{% endblock %}
+
+<!-- Ajout du style CSS pour l'animation -->
+<style>
+    @keyframes bounce {
+        0%, 100% {
+            transform: translateY(0);
+        }
+        50% {
+            transform: translateY(-20px);
+        }
+    }
+
+    .cta-animation:hover {
+        color: #3c8dbc;
+        transform: scale(1.2);
+        transition: transform 0.3s ease-in-out;
+    }
+
+    .services-list {
+        display: flex;
+        justify-content: space-around;
+        flex-wrap: wrap;
+        gap: 30px;
+        text-align: center;
+        margin-top: 40px;
+    }
+
+    .service-item {
+        flex: 1 1 calc(33% - 20px);
+        background-color: rgba(255, 255, 255, 0.8);
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .service-item:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
+</style>

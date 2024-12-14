@@ -1,0 +1,94 @@
+{% extends 'dashboard/enseignant/base.html' %}
+
+{% block content %}
+<div class="row">
+    <main role="main" class="col-md-8 ml-sm-auto col-lg-10 px-4">
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+            <h1 class="h2">Gestion des devoirs</h1>
+        </div>
+
+        <!-- Search Input -->
+        <div style="text-align: center; margin-top: 30px;">
+            <input type="text" id="searchInput" placeholder="Rechercher un devoir..." style="padding: 12px 20px; width: 60%; border-radius: 10px; border: 1px solid #ccc; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+        </div>
+
+        <div class="container mt-5">
+            <h2 class="text-center mb-4" style="font-size: 2.5rem; font-weight: 700;">Devoirs des étudiants</h2>
+
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr style="background-color: #059a96; color: #ffffff; text-align: center;">
+                            <th>Étudiant</th>
+                            <th>Titre</th>
+                            <th>Description</th>
+                            <th>Fichier</th>
+                            <th>Date de Dépôt</th>
+                            <th>Note</th>
+                        </tr>
+                    </thead>
+                    <tbody id="devoirsTable">
+                        {% for devoir in devoirs %}
+                            <tr style="text-align: center;">
+                                <td>{{ devoir.etudiant.username }}</td>
+                                <td>{{ devoir.titre }}</td>
+                                <td>{{ devoir.description }}</td>
+                                <td>
+                                    {% if devoir.fichier %}
+                                        <a href="{{ devoir.fichier.url }}" class="btn btn-primary" style="padding: 8px 16px; border-radius: 5px;">
+                                            <i class="fa-solid fa-download"></i>
+                                        </a>
+                                    {% else %}
+                                        Aucun fichier
+                                    {% endif %}
+                                </td>
+                                <td>{{ devoir.date_depot }}</td>
+                                <td>
+                                    <form method="post" action="{% url 'noter_devoir' devoir.id %}">
+                                        {% csrf_token %}
+                                        <input type="number" name="note" min="0" max="20" step="0.5" value="{{ devoir.note }}" style="width: 70px;">
+                                        <button type="submit" class="btn btn-success" style="margin-top: 5px;"><i class="fa-solid fa-check"></i></button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Message si aucune correspondance -->
+            <p id="noResultsMessage" style="text-align: center; color: #ff0000; display: none;">Aucun devoir trouvé pour cette recherche.</p>
+        </div>
+    </main>
+</div>
+{% endblock %}
+
+<script>
+    document.getElementById('searchInput').addEventListener('input', function() {
+        const searchText = this.value.toLowerCase();
+        const rows = document.querySelectorAll('#devoirsTable tr');  // Sélectionne toutes les lignes du tableau
+        let noResults = true;  // Variable pour savoir si des résultats ont été trouvés
+
+        rows.forEach(row => {
+            const etudiant = row.querySelector('td:nth-child(1)').textContent.toLowerCase();
+            const titre = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
+            const description = row.querySelector('td:nth-child(3)').textContent.toLowerCase();
+
+            // Si la recherche correspond à l'une des colonnes, afficher la ligne
+            if (etudiant.includes(searchText) || titre.includes(searchText) || description.includes(searchText)) {
+                row.style.display = '';  // Afficher la ligne
+                noResults = false;  // Résultat trouvé
+            } else {
+                row.style.display = 'none';  // Masquer la ligne
+            }
+        });
+
+        // Afficher un message si aucune correspondance n'est trouvée
+        const noResultsMessage = document.getElementById('noResultsMessage');
+        if (noResults) {
+            noResultsMessage.style.display = 'block';
+        } else {
+            noResultsMessage.style.display = 'none';
+        }
+    });
+</script>

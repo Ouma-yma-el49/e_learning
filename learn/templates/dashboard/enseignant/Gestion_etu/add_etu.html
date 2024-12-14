@@ -1,0 +1,22 @@
+{% extends 'dashboard/enseignant/base.html' %}
+
+{% block content %}
+       <div class="row">
+        <!-- Main Content Section -->
+        <main style="width: 80%; padding: 20px; font-family: Arial, sans-serif; color: #333;">
+              <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 >Ajouter un nouveau Etudiant</h1>
+                   <a href="{% url 'liste_etudiants' %}" class="btn btn-secondary mt-3">Retour à la Liste</a>
+                </div>
+                <div class="container mt-4">
+
+                    <form method="post">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <button type="submit" class="btn btn-primary">Ajouter l'Étudiant</button>
+                    </form>
+
+                </div>
+        </main>
+       </div>
+{% endblock %}

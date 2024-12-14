@@ -1,0 +1,28 @@
+{% extends 'dashboard/etudiant/base.html' %}
+{% load static %}
+{% block title %}Accueil{% endblock %}
+
+{% block content %}
+<div class="hero" >
+    <h1 class="hero-title" >Bienvenue {{ user.username }}</h1>
+    <p class="hero-text" >Retrouvez les meilleurs cours et ressources pour améliorer vos compétences et vous préparer aux défis de demain.</p>
+    <a href="{% url 'mescours' %}" class="btn">Découvrir les cours</a>
+<style>   .btn {
+    background-color: #00bfa6;
+    color: #fff;
+    border: none;
+    padding: 15px 40px;
+    font-size: 20px;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 5px 20px rgba(0, 191, 166, 0.5);
+    text-decoration: none;
+}
+
+.btn:hover {
+    background-color: #02b598;
+    box-shadow: 0 8px 30px rgba(0, 191, 166, 0.7);
+}</style>
+</div>
+{% endblock %}

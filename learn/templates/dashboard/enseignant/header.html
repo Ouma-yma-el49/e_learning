@@ -1,0 +1,59 @@
+<nav class="col-md-2 d-none d-md-block bg-light sidebar">
+    <div class="sidebar-sticky">
+        <!-- Section Nom de l'utilisateur connecté -->
+
+        {% if user.is_authenticated %}
+            <div class="user-info text-center py-3" style="border-bottom: 1px solid #ccc; background-color: #f8f9fa;">
+            <i class="fa-solid fa-circle-user"></i>
+                <span class="font-weight-bold">Bonjour,</span>
+                <a href="{% url 'profil_utilisateur' %}" class="user-name" style="font-size: 16px; font-weight: bold; color: #059a96; text-decoration: none;">
+                    {{ user.first_name|default:user.username }}
+                </a>
+            </div>
+        {% endif %}
+
+
+        <!-- Liste des liens -->
+        <ul class="nav flex-column mt-3">
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'dashboard' %}">
+                    <i class="fas fa-tachometer-alt"></i> Dashboard
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'cours_list' %}">
+                    <i class="fas fa-book"></i> Gestion des cours
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'visualiser_devoirs' %}">
+                    <i class="fas fa-tasks"></i> Gestion des devoirs
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'annonces_list' %}">
+                    <i class="fas fa-bullhorn"></i> Annonces
+                </a>
+            </li>
+
+
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'liste_etudiants' %}">
+                    <i class="fas fa-users"></i> Gestion des étudiants
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'chat_enseignant'  %}">
+                       <i class="fas fa-comments"></i> Chat
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'log_out' %}">
+                    <i class="fas fa-sign-out-alt"></i> Déconnexion
+                </a>
+            </li>
+        </ul>
+    </div>
+</nav>
