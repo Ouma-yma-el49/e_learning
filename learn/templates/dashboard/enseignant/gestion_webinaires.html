@@ -1,0 +1,183 @@
+{% extends 'dashboard/enseignant/base.html' %}
+
+{% block content %}
+    <div class="row">
+        <main role="main" class="col-md-8 ml-sm-auto col-lg-10 px-4">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1>Webinaire</h1>
+            </div>
+            <div class="container py-4">
+                <!-- Section d'en-tête -->
+                <div class="row mb-4">
+                    <div class="col-md-12">
+                        <h5 class="h5 text-dark font-weight-bold">Ajoutez, gérez et accédez aux webinaires.</h5>
+                    </div>
+                </div>
+                <div>
+                    <!-- Bouton pour ouvrir la modale -->
+                    <button class="btn btn-success" data-toggle="modal" data-target="#addWebinaireModal" style="padding: 10px 20px; background-color: #059a96; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                        <i class="fas fa-plus"></i> Ajouter un Webinaire
+                    </button>
+                </div>
+
+                <br>
+                <!-- Tableau des webinaires -->
+                <h3>Webinaires</h3>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Titre</th>
+                            <th>Date</th>
+                            <th>État</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for webinaire in webinaires %}
+                            <tr id="webinaire-{{ webinaire.id }}">
+                                <td>{{ webinaire.titre }}</td>
+                                <td>{{ webinaire.date }}</td>
+                                <td>
+                                    <button class="btn btn-sm" id="state-button-{{ webinaire.id }}"
+                                        {% if webinaire.etat == 'termine' %}
+                                            style="background-color: #28a745; color: white;"
+                                        {% elif webinaire.etat == 'annule' %}
+                                            style="background-color: #d80d0d; color: white;"
+                                        {% else %}
+                                            style="background-color: rgba(74,73,73,0.5); color: white;"
+                                        {% endif %}
+                                        onclick="toggleStateDropdown({{ webinaire.id }})">
+                                        {% if webinaire.etat == 'termine' %}
+                                            Terminé
+                                        {% elif webinaire.etat == 'annule' %}
+                                            Annulé
+                                        {% else %}
+                                            Non terminé
+                                        {% endif %}
+                                    </button>
+
+                                    <!-- Menu déroulant caché pour modifier l'état -->
+                                    <div id="state-dropdown-{{ webinaire.id }}" class="dropdown-menu">
+                                        <button class="dropdown-item" onclick="updateWebinaireState({{ webinaire.id }}, 'termine')" style="background-color: #28a745; color: white;">Terminé</button>
+                                        <button class="dropdown-item" onclick="updateWebinaireState({{ webinaire.id }}, 'non_termine')">Non terminé</button>
+                                        <button class="dropdown-item" onclick="updateWebinaireState({{ webinaire.id }}, 'annule')">Annulé</button>
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <!-- Bouton "Accéder", désactivé si le webinaire est terminé ou annulé -->
+                                    <a href="{{ webinaire.lien }}"
+                                       class="btn btn-info btn-sm {% if webinaire.etat == 'termine' or webinaire.etat == 'annule' %}disabled{% endif %}"
+                                       {% if webinaire.etat == 'termine' or webinaire.etat == 'annule' %}tabindex="-1" aria-disabled="true"{% endif %}>
+                                        <i class="fas fa-video"></i> Accéder
+                                    </a>
+                                    <!-- Bouton pour supprimer -->
+                                    <form action="{% url 'supprimer_webinaire' webinaire.id %}" method="POST" style="display:inline;">
+                                        {% csrf_token %}
+                                        <button class="btn btn-danger btn-sm">
+                                            <i class="fas fa-trash"></i> Supprimer
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+                <!-- Modale pour ajouter un webinaire -->
+                <div class="modal fade" id="addWebinaireModal" tabindex="-1" role="dialog" aria-labelledby="addWebinaireModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="addWebinaireModalLabel">Ajouter un Webinaire</h5>
+                            </div>
+                            <div class="modal-body">
+                                <form action="{% url 'ajouter_webinaire' %}" method="POST">
+                                    {% csrf_token %}
+                                    <div class="form-group">
+                                        <label for="titre">Titre</label>
+                                        <input type="text" class="form-control" id="titre" name="titre" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="date">Date</label>
+                                        <input type="datetime-local" class="form-control" id="date" name="date" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="lien">Lien</label>
+                                        <input type="url" class="form-control" id="lien" name="lien" required>
+                                    </div>
+
+                                    <div class="modal-footer">
+                                        <button type="submit" class="btn btn-primary">Enregistrer</button>
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+<script>
+// Afficher ou masquer le menu déroulant
+function toggleStateDropdown(webinaireId) {
+    const dropdown = document.getElementById(`state-dropdown-${webinaireId}`);
+    dropdown.style.display = dropdown.style.display === "none" ? "block" : "none";
+}
+
+// Fonction pour mettre à jour l'état d'un webinaire
+function updateWebinaireState(webinaireId, newState) {
+    fetch("{% url 'update_webinaire_state' %}", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": "{{ csrf_token }}"
+        },
+        body: JSON.stringify({
+            'webinaire_id': webinaireId,
+            'etat': newState
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        // Mettre à jour l'interface utilisateur
+        const row = document.getElementById(`webinaire-${webinaireId}`);
+        const stateButton = row.querySelector('#state-button-' + webinaireId);
+        const accessButton = row.querySelector('a.btn-info');
+
+        // Mettre à jour l'état du webinaire et la couleur du bouton
+        if (newState === "termine") {
+            stateButton.className = "btn btn-sm btn-success";
+            stateButton.style.backgroundColor = '#28a745'; // Vert
+            stateButton.style.color = 'white';
+            stateButton.innerText = "Terminé";
+            accessButton.classList.add("disabled");
+            accessButton.setAttribute("aria-disabled", "true");
+        } else if (newState === "annule") {
+            stateButton.className = "btn btn-sm btn-danger";
+            stateButton.innerText = "Annulé";
+            stateButton.style.backgroundColor = '#d80d0d'; // Rouge
+            stateButton.style.color = 'white';
+            accessButton.classList.add("disabled");
+            accessButton.setAttribute("aria-disabled", "true");
+        } else {
+            stateButton.className = "btn btn-sm btn-secondary";
+            stateButton.innerText = "Non terminé";
+            stateButton.style.backgroundColor = 'rgba(74,73,73,0.5)'; // Gris
+            stateButton.style.color = 'white';
+            accessButton.classList.remove("disabled");
+            accessButton.removeAttribute("aria-disabled");
+        }
+
+        // Masquer le menu déroulant après la mise à jour
+        document.getElementById(`state-dropdown-${webinaireId}`).style.display = "none";
+    })
+    .catch(error => {
+        console.error("Erreur :", error);
+    });
+}
+</script>
+
+{% endblock %}

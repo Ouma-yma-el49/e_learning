@@ -1,5 +1,5 @@
 from django import forms
-from .models import Annonces, Formation, Chapitre, Profile, Devoir
+from .models import Annonces, Formation, Chapitre, Profile, Devoir, Webinaire
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 
@@ -85,3 +85,10 @@ class NoteForm(forms.ModelForm):
 class MessageForm(forms.Form):
     subject = forms.CharField(max_length=100, label="Objet")
     message = forms.CharField(widget=forms.Textarea, label="Message")
+
+
+
+class WebinaireForm(forms.ModelForm):
+    class Meta:
+        model = Webinaire
+        fields = ['titre','lien']

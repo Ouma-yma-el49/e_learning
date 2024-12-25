@@ -1,6 +1,8 @@
 
 from django.db import models
 from django.contrib.auth import get_user_model
+from django.utils.timezone import now
+
 User = get_user_model()
 from django.contrib.auth.models import User
 
@@ -17,7 +19,7 @@ class Formation(models.Model):
     titre = models.CharField(max_length=255)
     description = models.TextField()
     enseignant = models.ForeignKey(User, on_delete=models.CASCADE)  # L'enseignant qui a créé le cours
-
+    date_creation = models.DateTimeField(auto_now_add=True)
     def __str__(self):
         return self.titre
 
@@ -50,19 +52,10 @@ class Devoir(models.Model):
     date_depot = models.DateTimeField(auto_now_add=True)
     etudiant = models.ForeignKey(User, on_delete=models.CASCADE)  # Associe un étudiant à chaque devoir
     note = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
-
+    is_submitted = models.BooleanField(default=False)
     def __str__(self):
         return self.titre
 
-
-class Chat(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-
-    message = models.TextField()
-    posted_at = models.DateTimeField(auto_now=True, null=True)
-
-    def _str_(self):
-        return str(self.message)
 
 class Message(models.Model):
     from_user = models.ForeignKey(User, related_name='sent_messages', on_delete=models.CASCADE)
@@ -74,4 +67,24 @@ class Message(models.Model):
     def __str__(self):
         return str(self.content)
 
+
+
+
+class Webinaire(models.Model):
+    STATUT_CHOICES=[
+        ('non_termine', 'Non terminé'),
+        ('annule', 'Annulé'),
+        ('termine', 'Terminé'),
+    ]
+    titre = models.CharField(max_length=200)
+    date = models.DateTimeField(auto_now=True)
+    lien = models.URLField()
+    enseignant = models.ForeignKey(User, on_delete=models.CASCADE)
+    etat = models.CharField(max_length=15, choices=STATUT_CHOICES, default='non_termine')
+    est_termine = models.BooleanField(default=False)
+    date_creation = models.DateTimeField(auto_now_add=True)
+    est_annule = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.titre
 

@@ -52,7 +52,15 @@ urlpatterns = [
         path('dashboard/etudiant/chat', views.chat, name='chat'),
         path('chat/', views.chat_enseignant, name='chat_enseignant'),
         path('profile/', views.profile_view, name='profile'),
-path('profile/update', views.update_profile, name='update_profile'),
+        path('profile/update', views.update_profile, name='update_profile'),
+        path('gestion_webinaires/', views.gestion_webinaires, name='gestion_webinaires'),
+        path('ajouter_webinaire/', views.ajouter_webinaire, name='ajouter_webinaire'),
+        path('supprimer_webinaire/<int:id>/', views.supprimer_webinaire, name='supprimer_webinaire'),
+        path('webinaires/', views.webinaires_etudiant, name='webinaires_etudiant'),
+        path('signaler_termine/<int:webinaire_id>/', views.signaler_termine, name='signaler_termine'),
+        path('update_webinaire_state/', views.update_webinaire_state, name='update_webinaire_state'),
+
+
 
 
 ]

@@ -36,6 +36,12 @@
     <script src="{% static 'js/bootstrap.js' %}"></script>
     <script src="{% static 'js/bootstrap.min.js' %}"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- Inclure jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Inclure Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+
 
 <!-- Scripts spécifiques -->
 {% block scripts %}
@@ -62,6 +68,27 @@
             tooltip.style.display = 'none'; //Cache le tooltip
         });
     });
+
+    function updateTime() {
+        const now = new Date();
+        const options = {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: 'numeric',
+            minute: 'numeric',
+            second: 'numeric',
+            hour12: false
+        };
+        const dateTimeString = now.toLocaleDateString('fr-FR', options);
+        document.getElementById('current-time').textContent = dateTimeString;
+    }
+
+    setInterval(updateTime, 1000); // Met à jour toutes les secondes
+    updateTime(); // Appel initial pour afficher immédiatement l'heure
+
+
     </script>
 <!-- Vous pouvez insérer ici le script jQuery pour activer les popovers -->
 {% endblock %}

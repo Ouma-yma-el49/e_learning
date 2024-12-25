@@ -1,7 +1,13 @@
 <nav class="col-md-2 d-none d-md-block bg-light sidebar">
     <div class="sidebar-sticky">
         <!-- Section Nom de l'utilisateur connecté -->
+<div class="row">
+        <div class="col-md-12 text-center">
+             <p id="current-time"></p>
 
+
+        </div>
+    </div>
         {% if user.is_authenticated %}
             <div class="user-info text-center py-3" style="border-bottom: 1px solid #ccc; background-color: #f8f9fa;">
             <i class="fa-solid fa-circle-user"></i>
@@ -12,6 +18,7 @@
             </div>
         {% endif %}
 
+ <!-- Affichage de la date et de l'heure -->
 
         <!-- Liste des liens -->
         <ul class="nav flex-column mt-3">
@@ -40,6 +47,12 @@
             <li class="nav-item">
                 <a class="nav-link" href="{% url 'liste_etudiants' %}">
                     <i class="fas fa-users"></i> Gestion des étudiants
+                </a>
+            </li>
+
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'gestion_webinaires' %}">
+                    <i class="fas fa-video"></i> Webinaires
                 </a>
             </li>
 

@@ -2,7 +2,7 @@
 .sidebar {
     background-color: #059a96 !important;/* Bleu nuit */
     color: #2c3e50 !important;
-    padding-top: 6rem;
+    padding-top: 2rem;!important;
     width: 250px;
     position: fixed;
     top: 0;
@@ -385,4 +385,16 @@ button:hover {
     color: #6c757d;
     font-style: italic;
     text-align: center;
+}
+/* Exemple de notification sur l'icône */
+.supprimer-btn {
+    background-color: red;
+    color: white;
+    border: none;
+    padding: 5px;
+    cursor: pointer;
+}
+
+.supprimer-btn:hover {
+    background-color: darkred;
 }

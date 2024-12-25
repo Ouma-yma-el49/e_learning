@@ -1,0 +1,58 @@
+{% extends 'dashboard/etudiant/base.html' %}
+
+{% block content %}
+    <div class="hero">
+        <h1 class="hero-title">Liste des Webinaires</h1>
+        <div class="hero-text">
+            {% if webinaires %}
+             <div style="height: 60vh; overflow-y: scroll; padding: 20px;">
+
+                    <table class="table" style="min-width: 800px;">
+                        <thead>
+                            <tr>
+                                <th>Titre</th>
+                                <th>Date</th>
+                                <th>État</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for webinaire in webinaires %}
+                                <tr>
+                                    <td>{{ webinaire.titre }}</td>
+                                    <td>{{ webinaire.date_creation|date:"d F Y" }}</td>
+                                    <td>
+                                        {% if webinaire.etat == 'annule' %}
+                                            <span class="badge" style="background-color: #dc3545; color: white; padding: 6px 12px; border-radius: 12px;">Annulé</span>
+                                        {% elif webinaire.etat == 'termine' %}
+                                            <span class="badge" style="background-color: #28a745; color: white; padding: 6px 12px; border-radius: 12px;">Terminé</span>
+                                        {% else %}
+                                            <span class="badge" style="background-color: #ffc107; color: black; padding: 6px 12px; border-radius: 12px;">Non terminé</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if webinaire.etat == 'termine' or webinaire.etat == 'annule' %}
+                                             <a href="#" class="btn btn-info btn-sm disabled" tabindex="-1" aria-disabled="true" style="width: 100%; padding: 6px; background-color: rgba(74,73,73,0.5); color: white; border-radius: 8px; border: none; text-decoration: none; cursor: not-allowed;">
+                                                <i class="fas fa-video"></i> Accéder
+                                            </a>
+                                        {% else %}
+                                            {% if webinaire.lien %}
+                                                <a href="{{ webinaire.lien }}" class="btn-submit" style="width: 100%; padding: 6px; background-color: #059a96; color: white; border-radius: 8px; border: none; text-decoration: none; display: inline-block; cursor: pointer;">
+                                                    <i class="fas fa-video"></i> Accéder
+                                                </a>
+                                            {% else %}
+                                                <em>Non disponible</em>
+                                            {% endif %}
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p>Aucun webinaire disponible pour le moment.</p>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

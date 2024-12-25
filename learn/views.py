@@ -1,17 +1,23 @@
+from django.views.decorators.csrf import csrf_exempt
+import json
+
+from django.db.models.functions.datetime import TruncMonth
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Annonces
-from .forms import AnnoncesForm, ChapitreForm, UserForm, ProfileForm, DevoirForm, MessageForm, ProfileUpdateForm
-from .models import Formation, Chapitre, User,Profile, Devoir, Message
+from django.views.decorators.http import require_POST
+
+from .forms import AnnoncesForm, ChapitreForm, UserForm,DevoirForm,WebinaireForm
+from .models import Formation, Chapitre, User, Devoir, Message, Annonces
 from django.contrib.auth.decorators import login_required, user_passes_test
 from .forms import CoursForm
 from django.core.validators import validate_email
-from django.db.models import Q
+from django.db.models import Q, Avg, Count, functions
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.models import User, Group
-from django.http import HttpResponse, FileResponse, HttpResponseRedirect
+from django.contrib.auth.models import User
+from django.http import HttpResponse, FileResponse
 from django.utils import timezone
 from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
+from .models import Webinaire
+
 def acceuil(request):
     return render(request, 'acceuil.html')
 
@@ -25,15 +31,53 @@ def contact(request):
     return render(request, 'contact.html')
 
 def home_ens(request):
-    annonces = Annonces.objects.all().values()
     total_etu = User.objects.filter(email__icontains='-etu@etu.univh2c.ma').count()
+    total_cours = Formation.objects.count()
+    total_webinaires = Webinaire.objects.count()
+    total_devoirs = Devoir.objects.filter(note__isnull=True).count()  # Exemple
+    moyenne_notes = round(Devoir.objects.aggregate(Avg('note'))['note__avg'] ,2)# Moyenne des notes des étudiants
+    taux_reussite = round((Devoir.objects.filter(note__gte=10).count() / total_etu) * 10, 2) if total_etu > 0 else 0
+    annonces = Annonces.objects.all().order_by('-date_creation')[:5]  # Dernières annonces
+    # Données pour les graphiques
 
-    total_cours=Formation.objects.count()
+    # Obtenir les webinaires par mois
+    # Webinaires par mois
+    webinaire_par_mois = (
+        Webinaire.objects.annotate(month=TruncMonth('date_creation'))
+        .values('month')
+        .annotate(count=Count('id'))
+        .order_by('month')
+    )
+    labels_webinaires = [w['month'].strftime('%B %Y') for w in webinaire_par_mois]
+    data_webinaires = [w['count'] for w in webinaire_par_mois]
+
+    # Cours par mois
+    cours_par_mois = Formation.objects.annotate(month=TruncMonth('date_creation')).values('month').annotate(
+        count=Count('id')).order_by('month')
+    labels_cours = [str(c['month'].strftime('%B %Y')) for c in cours_par_mois]
+    data_cours = [c['count'] for c in cours_par_mois]
+
+    # Étudiants inscrits par mois
+    etudiants_par_mois = User.objects.filter(email__icontains='-etu@etu.univh2c.ma').annotate(month=TruncMonth('date_joined')).values(
+        'month').annotate(count=Count('id')).order_by('month')
+    labels_etudiants = [str(e['month'].strftime('%B %Y')) for e in etudiants_par_mois]
+    data_etudiants = [e['count'] for e in etudiants_par_mois]
+
+
     context = {
         'total_cours': total_cours,
-        'annonces': annonces,
         'total_etu': total_etu,
-
+        'total_webinaires': total_webinaires,
+        'total_devoirs': total_devoirs,
+        'moyenne_notes': moyenne_notes,
+        'taux_reussite': taux_reussite,
+        'annonces': annonces,
+        'labels_webinaires': labels_webinaires,
+        'data_webinaires': data_webinaires,
+        'labels_cours': labels_cours,
+        'data_cours': data_cours,
+        'labels_etudiants': labels_etudiants,
+        'data_etudiants': data_etudiants,
     }
     return render(request, 'dashboard/enseignant/home.html', context)
 def home_etu(request):
@@ -44,15 +88,14 @@ def home_etu(request):
 
     return render(request, 'dashboard/etudiant/home_etu.html',context)
 def annonce(request):
-    annonces = Annonces.objects.all().values()
+    annonces = Annonces.objects.all().values().order_by('-date_creation')
     context = {
         'annonces': annonces,
     }
-
     return render(request, 'dashboard/etudiant/annonces.html',context)
 
 def annonces_list(request):
-    annonces = Annonces.objects.all().values()
+    annonces = Annonces.objects.all().values().order_by('-date_creation')
     return render(request,'dashboard/enseignant/Annonces/annonce_list.html',{'annonces':annonces,})
 
 
@@ -213,8 +256,12 @@ def sing_in(request):
                 if email.endswith('-etu@etu.univh2c.ma'): # mail universitaire pour etudiant
                     return redirect('home_etu')  # Redirige vers la page d'accueil
                 else:
-                    return redirect('dashboard')  #
-
+                    if email.endswith('@ens.ma'):
+                        return redirect('dashboard')
+                    else :
+                        error = True
+                        message=("Impossible de vous se connecter. "
+                                 "Vous devriez vous s'inscrire avec un indicatif universitaire")
             else:
                 # Mot de passe incorrect
                 error = True
@@ -433,7 +480,7 @@ def delete_devoir(request, pk):
 
 @login_required
 def chat(request):
-    messages = Message.objects.all().order_by('timestamp')  # Obtenez tous les messages
+    messages = Message.objects.all().order_by('-created_at')  # Obtenez tous les messages
     if request.method == 'POST':
         content = request.POST.get('content')
         if content:
@@ -445,11 +492,11 @@ def chat(request):
 
 @login_required
 def chat_enseignant(request):
-    messages = Message.objects.all().order_by('timestamp')  # Obtenez tous les messages
+    messages = Message.objects.all().order_by('-created_at')  # Obtenez tous les messages
     if request.method == 'POST':
         content = request.POST.get('content')
         if content:
-            # Définir 'to_user' ici - vous devez probablement définir un utilisateur spécifique
+            # Définir 'to_user' ici pour définir un utilisateur spécifique
             to_user = User.objects.first()  # Par exemple, récupérer un utilisateur par défaut, ou gérer un chat de groupe
             Message.objects.create(from_user=request.user, to_user=to_user, content=content, timestamp=timezone.now())
             return redirect('chat_enseignant')  # Assurez-vous que le nom de l'URL est correct
@@ -474,3 +521,69 @@ def update_profile(request):
         form = UserForm(instance=request.user)
 
     return render(request, 'dashboard/etudiant/profil.html', {'form': form})
+
+
+
+# Afficher la liste des webinaires et gérer l'ajout et la suppression
+def gestion_webinaires(request):
+    # Récupérer tous les webinaires non terminés
+    webinaires = Webinaire.objects.all().order_by("-date_creation")
+    context = {
+        'webinaires': webinaires,
+    }
+    return render(request, 'dashboard/enseignant/gestion_webinaires.html', context)
+# Ajouter un webinaire
+def ajouter_webinaire(request):
+    if request.method == 'POST':
+        titre = request.POST.get('titre')
+        date= request.POST.get('date')
+        lien = request.POST.get('lien')
+        webinaire = Webinaire.objects.create(titre=titre, date=date, lien=lien, enseignant=request.user )
+        return redirect('gestion_webinaires')
+
+# Supprimer un webinaire
+def supprimer_webinaire(request, id):
+    webinaire = Webinaire.objects.get(id=id)
+    webinaire.delete()
+    return redirect('gestion_webinaires')
+
+@login_required
+def webinaires_etudiant(request):
+    # Filtrer les webinaires par disponibilité ou critères spécifiques
+    webinaires = Webinaire.objects.filter().order_by('-date_creation')
+
+    context = {
+        'webinaires': webinaires,  # Passer la liste des webinaires au template
+    }
+
+    return render(request, 'dashboard/etudiant/webinaire_liste.html', context)
+
+
+def signaler_termine(request, webinaire_id):
+    webinaire = Webinaire.objects.get(id=webinaire_id)
+    webinaire.est_termine= True
+    webinaire.save()
+    return redirect('gestion_webinaires')  # Redirige vers la page des webinaires
+
+@csrf_exempt
+def update_webinaire_state(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        webinaire_id = data.get('webinaire_id')
+        new_state = data.get('etat')
+
+        # Vérifier que l'état est valide
+        if new_state not in dict(Webinaire.STATUT_CHOICES):
+            return JsonResponse({'success': False, 'error': 'État invalide.'})
+
+        try:
+            webinaire = Webinaire.objects.get(id=webinaire_id)
+            # Mise à jour de l'état
+            webinaire.etat = new_state
+            webinaire.save()
+
+            return JsonResponse({'success': True})
+        except Webinaire.DoesNotExist:
+            return JsonResponse({'success': False, 'error': 'Webinaire introuvable.'})
+
+    return JsonResponse({'success': False, 'error': 'Requête invalide.'})
